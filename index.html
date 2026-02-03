@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AI ALPHA // Mobile Intel Report</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #111118;
+  --bg-card: #16161f;
+  --bg-card-alt: #1a1a25;
+  --border: #2a2a3a;
+  --text-primary: #e8e8f0;
+  --text-secondary: #8888a0;
+  --text-dim: #55556a;
+  --accent-red: #ff3e3e;
+  --accent-red-dim: #ff3e3e44;
+  --accent-cyan: #00d4ff;
+  --accent-cyan-dim: #00d4ff33;
+  --accent-gold: #ffd700;
+  --accent-gold-dim: #ffd70033;
+  --accent-green: #00ff88;
+  --accent-green-dim: #00ff8833;
+  --accent-purple: #b366ff;
+  --accent-orange: #ff8800;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* HEADER */
+.header {
+  padding: 24px 16px 20px;
+  background: linear-gradient(180deg, #0f0f18, var(--bg-primary));
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-red), var(--accent-cyan), transparent);
+}
+
+.header-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent-red);
+  opacity: 0.8;
+  margin-bottom: 8px;
+}
+
+.header h1 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(90deg, var(--text-primary), var(--accent-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.header-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.header-sub {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 300;
+}
+
+.class-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  padding: 3px 8px;
+  border: 1px solid var(--accent-gold-dim);
+  white-space: nowrap;
+}
+
+/* CONTAINER */
+.container {
+  padding: 16px;
+  max-width: 100%;
+}
+
+/* ALPHA BANNER */
+.alpha-banner {
+  background: linear-gradient(135deg, #ff3e3e11, #ff880008);
+  border: 1px solid var(--accent-red-dim);
+  border-left: 3px solid var(--accent-red);
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+}
+
+.alpha-banner h2 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-red);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.alpha-banner p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.alpha-banner .highlight {
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+/* STAT GRID */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.stat-grid .stat-wide {
+  grid-column: 1 / -1;
+}
+
+.stat-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+
+.stat-box .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+.stat-box .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.stat-box .delta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  margin-top: 2px;
+}
+
+.delta-up { color: var(--accent-green); }
+.delta-down { color: var(--accent-red); }
+.delta-neutral { color: var(--accent-gold); }
+
+/* SECTION DIVIDERS */
+.section-divider {
+  padding: 20px 0 12px;
+  border-top: 1px solid var(--border);
+  margin-top: 8px;
+}
+
+.section-divider h2 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+}
+
+.section-divider h2::after {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 2px;
+  background: var(--accent-cyan);
+  margin-top: 6px;
+}
+
+.section-divider .sub {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 300;
+}
+
+/* CARDS */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0; right: 0;
+  height: 2px;
+}
+
+.card-accent-red::before { background: linear-gradient(90deg, var(--accent-red), transparent); }
+.card-accent-cyan::before { background: linear-gradient(90deg, var(--accent-cyan), transparent); }
+.card-accent-gold::before { background: linear-gradient(90deg, var(--accent-gold), transparent); }
+.card-accent-green::before { background: linear-gradient(90deg, var(--accent-green), transparent); }
+
+.card-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 3px;
+}
+
+.card-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 220px;
+}
+
+.chart-container-tall {
+  height: 280px;
+}
+
+/* INSIGHTS */
+.insight {
+  background: var(--bg-card-alt);
+  border-left: 2px solid var(--accent-cyan);
+  padding: 12px 14px;
+  margin-top: 12px;
+  border-radius: 0 6px 6px 0;
+}
+
+.insight .tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.insight p {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.insight-red { border-left-color: var(--accent-red); }
+.insight-red .tag { color: var(--accent-red); }
+.insight-gold { border-left-color: var(--accent-gold); }
+.insight-gold .tag { color: var(--accent-gold); }
+.insight-green { border-left-color: var(--accent-green); }
+.insight-green .tag { color: var(--accent-green); }
+
+/* HEATMAP TABLE */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -16px;
+  padding: 0 16px;
+}
+
+.table-scroll::after {
+  content: '← swipe →';
+  display: block;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  color: var(--text-dim);
+  padding: 6px 0 0;
+  letter-spacing: 2px;
+}
+
+.heatmap-table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+}
+
+.heatmap-table th {
+  text-align: left;
+  padding: 6px 8px;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+  font-weight: 500;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+}
+
+.heatmap-table th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--bg-card);
+}
+
+.heatmap-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #1a1a25;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.heatmap-table td:first-child {
+  position: sticky;
+  left: 0;
+  background: var(--bg-card);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.heat-high { color: var(--accent-green) !important; font-weight: 600; }
+.heat-mid { color: var(--accent-gold) !important; }
+.heat-low { color: var(--accent-red) !important; font-weight: 600; }
+
+/* FINAL ASSESSMENT */
+.final-assessment {
+  background: linear-gradient(135deg, #1a0a0a, #0a1a1a);
+  border: 1px solid var(--accent-red-dim);
+  border-radius: 8px;
+  padding: 20px 16px;
+  margin-top: 16px;
+}
+
+.final-assessment h2 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 16px;
+}
+
+.final-assessment p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 14px;
+}
+
+.final-assessment .callout {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+.final-assessment .disclaimer {
+  margin-top: 16px;
+  border-top: 1px solid #2a2a3a;
+  padding-top: 12px;
+  color: var(--text-dim);
+  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* COLLAPSIBLE SECTIONS */
+.collapsible-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.collapsible-toggle .chevron {
+  font-size: 14px;
+  color: var(--text-dim);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+.collapsible-toggle.collapsed .chevron {
+  transform: rotate(-90deg);
+}
+
+.collapsible-content {
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  max-height: 5000px;
+  opacity: 1;
+}
+
+.collapsible-content.collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* NAV DOTS */
+.nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0; right: 0;
+  background: rgba(10,10,15,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
+  padding: 8px 12px;
+  z-index: 100;
+  display: flex;
+  justify-content: space-around;
+  gap: 4px;
+}
+
+.nav-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 4px 2px;
+  text-decoration: none;
+  flex: 1;
+  transition: color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-btn:active { color: var(--accent-cyan); }
+
+.nav-dot {
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  margin: 0 auto 3px;
+}
+
+/* Bottom padding for fixed nav */
+.bottom-spacer { height: 60px; }
+
+/* Smooth scrolling */
+html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-tag">▸ Richmond Fed CFO Survey // Autonomous Pattern Recognition</div>
+  <h1>AI REVOLUTION ALPHA INTELLIGENCE REPORT</h1>
+  <div class="header-meta">
+    <span class="header-sub">Q2 2020 → Q4 2025 · 23 Quarters · 134 Charts</span>
+    <span class="class-tag">▸ Actionable</span>
+  </div>
+  <div class="header-sub" style="margin-top:4px;">Generated: 2026-02-03 // Source: Richmond Fed + Atlanta Fed CFO Survey</div>
+</div>
+
+<div class="container">
+
+<!-- ALPHA BANNER -->
+<div class="alpha-banner">
+  <h2>▸ Primary Alpha Signal</h2>
+  <p>Machine pattern recognition identified a <span class="highlight">critical divergence</span> between CFO AI investment reality and market pricing. A <span class="highlight">Productivity Paradox 2.0</span> — CFOs invest in AI but don't yet see proportional output gains, while showing the highest "reduce reliance on labor" motivation since the series began. This creates a <span class="highlight">compression-then-release pattern</span> with a 4-8 quarter lag that human analysts miss.</p>
+</div>
+
+<!-- KEY METRICS -->
+<div class="stat-grid">
+  <div class="stat-box">
+    <div class="label">Economy Optimism</div>
+    <div class="value" style="color: var(--accent-gold)">60.2</div>
+    <div class="delta delta-down">▼ 2.7pts from peak</div>
+  </div>
+  <div class="stat-box">
+    <div class="label">Own Firm Optimism</div>
+    <div class="value" style="color: var(--accent-cyan)">69.9</div>
+    <div class="delta delta-neutral">Gap: +9.7pts</div>
+  </div>
+  <div class="stat-box">
+    <div class="label">Employment Exp</div>
+    <div class="value" style="color: var(--accent-red)">1.6%</div>
+    <div class="delta delta-down">5yr low</div>
+  </div>
+  <div class="stat-box">
+    <div class="label">Revenue Exp</div>
+    <div class="value" style="color: var(--accent-green)">7.0%</div>
+    <div class="delta delta-up">▲ Resilient</div>
+  </div>
+  <div class="stat-box stat-wide">
+    <div class="label">S&P 500 12-Month Forward</div>
+    <div class="value" style="color: var(--accent-purple)">+6.4% <span style="font-size:12px;color:var(--text-dim);font-weight:400;">| Best: +12.3% | 10yr Avg: 9.9%</span></div>
+  </div>
+</div>
+
+<!-- SIGNAL 1 -->
+<div class="section-divider" id="s1">
+  <div class="collapsible-toggle" onclick="toggleSection(this)">
+    <div>
+      <h2>Signal 1 — Optimism-Employment Divergence</h2>
+      <div class="sub">Revenue rising while employment collapses</div>
+    </div>
+    <span class="chevron">▼</span>
+  </div>
+</div>
+
+<div class="collapsible-content">
+  <div class="card card-accent-cyan">
+    <div class="card-label">Time Series</div>
+    <div class="card-title">CFO Optimism: Economy vs Own Firm</div>
+    <div class="chart-container"><canvas id="chart-optimism"></canvas></div>
+    <div class="insight">
+      <div class="tag">▸ AI Alpha Pattern</div>
+      <p>Own firm optimism consistently rides 8-12pts above economy — CFOs believe AI adoption gives them competitive edge. Gap expanding to ~10pts in Q4'25 while macro confidence erodes.</p>
+    </div>
+  </div>
+
+  <div class="card card-accent-red">
+    <div class="card-label">Divergence Analysis</div>
+    <div class="card-title">Revenue vs Employment Expectations</div>
+    <div class="chart-container"><canvas id="chart-rev-emp"></canvas></div>
+    <div class="insight insight-red">
+      <div class="tag">▸ Critical Divergence</div>
+      <p>Revenue 7.0% while employment 1.6% median — widest scissors in dataset history. THE signature of AI-driven productivity substitution: more revenue, fewer workers. Most investable signal.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL 2 -->
+<div class="section-divider" id="s2">
+  <div class="collapsible-toggle" onclick="toggleSection(this)">
+    <div>
+      <h2>Signal 2 — Labor Replacement Accelerator</h2>
+      <div class="sub">Equipment investment to reduce labor — the AI capex proxy</div>
+    </div>
+    <span class="chevron">▼</span>
+  </div>
+</div>
+
+<div class="collapsible-content">
+  <div class="card card-accent-gold">
+    <div class="card-label">Investment Motivation</div>
+    <div class="card-title">"Reduce Reliance on Labor" (% citing)</div>
+    <div class="chart-container"><canvas id="chart-labor-replace"></canvas></div>
+    <div class="insight insight-gold">
+      <div class="tag">▸ Regime Shift</div>
+      <p>Surged from 24.6% (Q3'20) to 26.8% (Q3'25). Spiked to 30.3% in Q1'21 and 28.5% Q1'24 — both preceded tech outperformance periods by 2-4 quarters.</p>
+    </div>
+  </div>
+
+  <div class="card card-accent-green">
+    <div class="card-label">Investment Drivers</div>
+    <div class="card-title">Equipment Investment Reasons — Q3'25 vs Q3'20</div>
+    <div class="chart-container"><canvas id="chart-invest-reasons"></canvas></div>
+    <div class="insight insight-green">
+      <div class="tag">▸ Composition Shift</div>
+      <p>Replacement/repair dropped 79%→75%, absorbed by labor reduction + cost reduction. Firms investing to eliminate headcount, not maintain equipment.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL 3 -->
+<div class="section-divider" id="s3">
+  <div class="collapsible-toggle" onclick="toggleSection(this)">
+    <div>
+      <h2>Signal 3 — Sector AI Adoption Map</h2>
+      <div class="sub">Business Services as the AI canary</div>
+    </div>
+    <span class="chevron">▼</span>
+  </div>
+</div>
+
+<div class="collapsible-content">
+  <div class="card card-accent-cyan">
+    <div class="card-label">Sector Heatmap</div>
+    <div class="card-title">Own-Firm Optimism by Sector</div>
+    <div class="table-scroll">
+      <table class="heatmap-table">
+        <thead>
+          <tr>
+            <th>Sector</th>
+            <th>Q4'23</th><th>Q1'24</th><th>Q2'24</th><th>Q3'24</th><th>Q4'24</th><th>Q1'25</th><th>Q2'25</th><th>Q3'25</th><th>Q4'25</th>
+            <th>Δ4Q</th><th>AI Exp</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Biz Services</td>
+            <td>70.0</td><td>71.5</td><td class="heat-high">72.2</td><td class="heat-high">73.4</td><td class="heat-high">75.4</td><td class="heat-high">72.2</td><td class="heat-high">70.2</td><td class="heat-high">72.5</td><td class="heat-high">72.8</td>
+            <td class="heat-high">+1.4</td><td class="heat-high">■■■■■</td>
+          </tr>
+          <tr>
+            <td>Construct/RE</td>
+            <td>67.4</td><td>69.3</td><td>69.3</td><td>70.2</td><td class="heat-high">73.3</td><td>71.1</td><td>69.7</td><td>70.3</td><td>68.0</td>
+            <td class="heat-low">-3.3</td><td class="heat-mid">■■□□□</td>
+          </tr>
+          <tr>
+            <td>Manufactur.</td>
+            <td>66.2</td><td>66.8</td><td>67.3</td><td>67.3</td><td>67.3</td><td>67.9</td><td>66.1</td><td>67.7</td><td>69.2</td>
+            <td class="heat-high">+1.9</td><td class="heat-mid">■■■□□</td>
+          </tr>
+          <tr>
+            <td>Retail/Trade</td>
+            <td>65.3</td><td>65.0</td><td>68.4</td><td>66.6</td><td>68.7</td><td>64.3</td><td>67.7</td><td>71.0</td><td>68.9</td>
+            <td>+0.2</td><td class="heat-mid">■■□□□</td>
+          </tr>
+          <tr>
+            <td>Other Svc</td>
+            <td>62.2</td><td>62.2</td><td>64.3</td><td>63.3</td><td>66.5</td><td>61.7</td><td>63.6</td><td>67.5</td><td class="heat-low">67.1</td>
+            <td class="heat-low">+0.6</td><td class="heat-low">■□□□□</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="insight">
+      <div class="tag">▸ Sector Alpha</div>
+      <p>Business Services maintains 5-7pt premium over all sectors — ONLY sector with positive Q4'25 momentum. Spread vs Other Services: 5.7pts. Maps directly to AI adoption capacity. Long AI-exposed, avoid physically-constrained.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL 4 -->
+<div class="section-divider" id="s4">
+  <div class="collapsible-toggle" onclick="toggleSection(this)">
+    <div>
+      <h2>Signal 4 — GDP & Spending Regime</h2>
+      <div class="sub">Growth trajectory + capital reallocation</div>
+    </div>
+    <span class="chevron">▼</span>
+  </div>
+</div>
+
+<div class="collapsible-content">
+  <div class="card card-accent-gold">
+    <div class="card-label">Probability Distribution</div>
+    <div class="card-title">CFO GDP Growth Probability — Regime Evolution</div>
+    <div class="chart-container chart-container-tall"><canvas id="chart-gdp-prob"></canvas></div>
+    <div class="insight insight-gold">
+      <div class="tag">▸ Distribution Signal</div>
+      <p>Probability mass centralized at 1.5-2.4% growth (32.2%). Negative tail at 13.6%. "Moderate stagnation" regime — IDEAL for AI alpha as productivity leaders diverge from laggards.</p>
+    </div>
+  </div>
+
+  <div class="card card-accent-red">
+    <div class="card-label">Spending Dynamics</div>
+    <div class="card-title">Net Spending Change — Last 3 Months</div>
+    <div class="chart-container chart-container-tall"><canvas id="chart-spending"></canvas></div>
+    <div class="insight insight-red">
+      <div class="tag">▸ Spending Compression</div>
+      <p>Net increasers compressed from 66% peak to 39.6%. But equipment investment sustained while structures declined. Capital reallocating from broad spending to targeted AI/automation.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL 5 -->
+<div class="section-divider" id="s5">
+  <div class="collapsible-toggle" onclick="toggleSection(this)">
+    <div>
+      <h2>Signal 5 — Market Expectations & Size Alpha</h2>
+      <div class="sub">Structural re-rating + firm size divergence</div>
+    </div>
+    <span class="chevron">▼</span>
+  </div>
+</div>
+
+<div class="collapsible-content">
+  <div class="card card-accent-green">
+    <div class="card-label">Forward Expectations</div>
+    <div class="card-title">S&P 500 CFO 12-Month Forward (Percentile Bands)</div>
+    <div class="chart-container"><canvas id="chart-sp500"></canvas></div>
+    <div class="insight insight-green">
+      <div class="tag">▸ Confidence Regime</div>
+      <p>10yr expected return: 8.4% (2020) → 9.9% (Q4'25). Pessimistic floor lifted from 2.6% to 4.3%. Not froth — structural re-rating from AI productivity priced into discount rates.</p>
+    </div>
+  </div>
+
+  <div class="card card-accent-cyan">
+    <div class="card-label">Size Analysis</div>
+    <div class="card-title">Optimism: Small (1-24) vs Large (500+)</div>
+    <div class="chart-container"><canvas id="chart-size"></canvas></div>
+    <div class="insight">
+      <div class="tag">▸ Size Divergence</div>
+      <p>Large firms flipped to higher optimism since Q3'23. Q4'25 gap: 5.9pts. AI capital barrier — large firms deploy at scale, small firms feel pressure without resources. Mega-cap outperformance continues 18-24mo.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL 6 -->
+<div class="section-divider" id="s6">
+  <div class="collapsible-toggle" onclick="toggleSection(this)">
+    <div>
+      <h2>Signal 6 — Price-Wage Compression</h2>
+      <div class="sub">AI deflation signature hiding in plain sight</div>
+    </div>
+    <span class="chevron">▼</span>
+  </div>
+</div>
+
+<div class="collapsible-content">
+  <div class="card card-accent-red">
+    <div class="card-label">Expectation Trends</div>
+    <div class="card-title">Wages, Prices, Unit Costs, Revenue</div>
+    <div class="chart-container chart-container-tall"><canvas id="chart-expectations"></canvas></div>
+    <div class="insight insight-red">
+      <div class="tag">▸ Deflationary Signal</div>
+      <p>Wages: 8.3% peak → 4.3%. Revenue holds 7.0%. Wage-revenue spread widened 1.5pts → 2.7pts. Margin expansion if AI suppresses wages faster than price pass-through declines.</p>
+    </div>
+  </div>
+
+  <div class="card card-accent-gold">
+    <div class="card-label">Margin Proxy</div>
+    <div class="card-title">Revenue-Wage & Revenue-Unit Cost Spreads</div>
+    <div class="chart-container chart-container-tall"><canvas id="chart-margins"></canvas></div>
+    <div class="insight insight-gold">
+      <div class="tag">▸ Margin Expansion</div>
+      <p>Both spreads positive and widening simultaneously = margin expansion cycle driven by AI cost suppression. More output per worker, lower wage pressure from automation optionality.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNAL 7 -->
+<div class="section-divider" id="s7">
+  <div class="collapsible-toggle" onclick="toggleSection(this)">
+    <div>
+      <h2>Signal 7 — Uncertainty & Investment</h2>
+      <div class="sub">AI spending breaking the uncertainty barrier</div>
+    </div>
+    <span class="chevron">▼</span>
+  </div>
+</div>
+
+<div class="collapsible-content">
+  <div class="card card-accent-cyan">
+    <div class="card-label">Investment Barriers</div>
+    <div class="card-title">Reasons NOT Investing</div>
+    <div class="chart-container"><canvas id="chart-not-invest"></canvas></div>
+  </div>
+
+  <div class="card card-accent-green">
+    <div class="card-label">Investment Plans</div>
+    <div class="card-title">Structures vs Equipment (% Planning)</div>
+    <div class="chart-container"><canvas id="chart-invest-plans"></canvas></div>
+  </div>
+
+  <div class="insight" style="margin-bottom: 16px;">
+    <div class="tag">▸ Uncertainty Paradox</div>
+    <p>"Uncertainty" dropped from 47.7% (COVID) to 23.7%, yet investment hasn't proportionally recovered. Firms CHOOSING not to invest in structures (33.6%) while maintaining equipment (61.3%). "No need to expand capacity" at 58.3% — output through technology intensity, not physical footprint.</p>
+  </div>
+</div>
+
+<!-- FINAL ASSESSMENT -->
+<div class="final-assessment" id="final">
+  <h2>▸ Actionable Alpha Framework</h2>
+
+  <p><span class="callout">ALPHA #1 — PRODUCTIVITY PARADOX:</span> Revenue +7.0% decoupling from employment +1.6%. Widest spread in history. Long AI revenue-per-employee gainers. Short labor-intensive without AI pathways.</p>
+
+  <p><span class="callout">ALPHA #2 — SECTOR ROTATION:</span> Business Services 5-7pt optimism premium WIDENING. Overweight SaaS, automation, AI infra. Underweight construction, physical-asset sectors.</p>
+
+  <p><span class="callout">ALPHA #3 — SIZE REVERSAL:</span> Large firms (500+) flipped to higher optimism. 5.9pt gap = AI capital barrier. Mega-cap outperformance continues 18-24mo until AI democratizes.</p>
+
+  <p><span class="callout">ALPHA #4 — MARGIN EXPANSION:</span> Wages 4.3% falling vs revenue 7.0% holding + labor replacement 26.8%. Textbook setup with 2-4Q realization lag. Favor high operating leverage.</p>
+
+  <p><span class="callout">ALPHA #5 — STRUCTURAL RE-RATING:</span> 10yr S&P expected return: 8.4% → 9.9%. Floor lifted 2.6% → 4.3%. Not bubble — permanently higher productivity into discount rates. Risk = under-allocation.</p>
+
+  <p class="disclaimer">Source: Richmond Fed / Atlanta Fed CFO Survey · Q2 2020 - Q4 2025 · N=300-550/quarter · Machine-generated analysis · Not investment advice</p>
+</div>
+
+<div class="bottom-spacer"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="nav-bar">
+  <a href="#s1" class="nav-btn"><span class="nav-dot"></span>S1</a>
+  <a href="#s2" class="nav-btn"><span class="nav-dot"></span>S2</a>
+  <a href="#s3" class="nav-btn"><span class="nav-dot"></span>S3</a>
+  <a href="#s4" class="nav-btn"><span class="nav-dot"></span>S4</a>
+  <a href="#s5" class="nav-btn"><span class="nav-dot"></span>S5</a>
+  <a href="#s6" class="nav-btn"><span class="nav-dot"></span>S6</a>
+  <a href="#s7" class="nav-btn"><span class="nav-dot"></span>S7</a>
+  <a href="#final" class="nav-btn"><span class="nav-dot" style="background:var(--accent-gold)"></span>α</a>
+</div>
+
+<script>
+// Collapsible sections
+function toggleSection(el) {
+  el.classList.toggle('collapsed');
+  const content = el.closest('.section-divider').nextElementSibling;
+  if (content && content.classList.contains('collapsible-content')) {
+    content.classList.toggle('collapsed');
+  }
+}
+
+// Chart defaults — mobile optimized
+Chart.defaults.color = '#8888a0';
+Chart.defaults.borderColor = '#2a2a3a';
+Chart.defaults.font.family = "'JetBrains Mono', monospace";
+Chart.defaults.font.size = 9;
+Chart.defaults.plugins.legend.labels.boxWidth = 8;
+Chart.defaults.plugins.legend.labels.padding = 10;
+Chart.defaults.plugins.legend.labels.font = { size: 8, family: "'JetBrains Mono', monospace" };
+
+const quarters = ['Q2\'20','Q3\'20','Q4\'20','Q1\'21','Q2\'21','Q3\'21','Q4\'21','Q1\'22','Q2\'22','Q3\'22','Q4\'22','Q1\'23','Q2\'23','Q3\'23','Q4\'23','Q1\'24','Q2\'24','Q3\'24','Q4\'24','Q1\'25','Q2\'25','Q3\'25','Q4\'25'];
+
+const mobileLineOpts = { pointRadius: 1.5, borderWidth: 1.5, tension: 0.3 };
+const mobileBarOpts = { borderWidth: 1, borderRadius: 2 };
+const mobileScaleOpts = (min, max, pct) => ({
+  y: { min, max, grid: { color: '#1a1a2a' }, ticks: { callback: pct ? v => v+'%' : undefined, font: { size: 8 } } },
+  x: { grid: { display: false }, ticks: { maxRotation: 60, font: { size: 7 }, maxTicksLimit: 12 } }
+});
+
+// CHART 1: Optimism
+const econOpt = [59.7,60.9,61.6,67.7,69.0,60.0,60.3,54.8,50.5,53.1,53.8,55.1,55.1,56.4,58.1,60.3,60.8,60.6,66.0,62.1,60.9,62.9,60.2];
+const firmOpt = [69.8,70.5,71.0,73.1,74.8,70.2,70.8,69.5,67.8,67.8,67.3,67.9,67.4,67.8,67.5,68.4,69.1,69.5,71.3,68.4,68.1,70.5,69.9];
+
+new Chart(document.getElementById('chart-optimism'), {
+  type: 'line',
+  data: {
+    labels: quarters,
+    datasets: [
+      { label: 'Economy', data: econOpt, borderColor: '#ff3e3e', ...mobileLineOpts, fill: false },
+      { label: 'Own Firm', data: firmOpt, borderColor: '#00d4ff', ...mobileLineOpts, fill: false }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, scales: mobileScaleOpts(45, 80, false) }
+});
+
+// CHART 2: Revenue vs Employment
+const revExp1 = [-3.1,0.6,0.1,7.9,9.7,11.0,13.5,11.0,9.2,9.0,9.1,7.2,3.0,3.6,3.6,5.8,5.5,4.8,5.4,6.8,5.4,7.8,7.0];
+const empMed = [0,0,0,3.2,2.9,2.0,0.9,3.3,2.6,2.5,3.7,2.6,2.6,0,2.2,2.1,0.8,1.5,1.9,1.1,0.8,1.2,1.6];
+
+new Chart(document.getElementById('chart-rev-emp'), {
+  type: 'line',
+  data: {
+    labels: quarters,
+    datasets: [
+      { label: 'Revenue (mean)', data: revExp1, borderColor: '#00ff88', ...mobileLineOpts, borderWidth: 2, fill: false },
+      { label: 'Employment (median)', data: empMed, borderColor: '#ff3e3e', ...mobileLineOpts, borderWidth: 2, fill: false }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, scales: mobileScaleOpts(undefined, undefined, true) }
+});
+
+// CHART 3: Labor Replacement
+const laborReplace = [24.6, 30.3, 28.5, 23.3, 20.2, 20.5, 28.1, 23.6, 28.3, 21.4, 26.8];
+const laborQ = ['Q3\'20','Q1\'21','Q3\'21','Q1\'22','Q3\'22','Q1\'23','Q3\'23','Q1\'24','Q3\'24','Q1\'25','Q3\'25'];
+
+new Chart(document.getElementById('chart-labor-replace'), {
+  type: 'bar',
+  data: {
+    labels: laborQ,
+    datasets: [{
+      label: '% "Reduce Labor"',
+      data: laborReplace,
+      backgroundColor: laborReplace.map(v => v >= 28 ? '#ffd700cc' : v >= 24 ? '#ffd70088' : '#ffd70044'),
+      borderColor: '#ffd700', ...mobileBarOpts
+    }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, scales: mobileScaleOpts(0, 40, true) }
+});
+
+// CHART 4: Investment Reasons
+const reasons = ['Replace/repair','Increase cap','Reduce labor','New product','Cost reduction','Health/safety','Financing'];
+const q3_2020 = [79.4, 49.1, 24.6, 24.0, 21.1, 20.0, 10.3];
+const q3_2025 = [74.8, 46.4, 26.8, 20.6, 18.7, 11.2, 2.8];
+
+new Chart(document.getElementById('chart-invest-reasons'), {
+  type: 'bar',
+  data: {
+    labels: reasons,
+    datasets: [
+      { label: 'Q3 2020', data: q3_2020, backgroundColor: '#ff3e3e55', borderColor: '#ff3e3e', ...mobileBarOpts },
+      { label: 'Q3 2025', data: q3_2025, backgroundColor: '#00ff8855', borderColor: '#00ff88', ...mobileBarOpts }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+    scales: {
+      x: { grid: { color: '#1a1a2a' }, ticks: { callback: v => v+'%', font: { size: 8 } } },
+      y: { grid: { display: false }, ticks: { font: { size: 8 } } }
+    }
+  }
+});
+
+// CHART 5: GDP Probability
+const negGrowth = [40.2,23.5,16.4,3.3,2.7,7.8,6.1,12.3,20.9,30.7,30.8,19.2,23.5,19.5,13.5,9.9,12.6,12.8,8.5,14.5,22.7,13.6,13.6];
+const lowGrowth = [14.3,19.9,16.8,9.6,5.2,11.1,12.3,14.8,22.3,25.0,26.0,26.5,30.8,26.5,25.8,19.8,23.8,22.0,15.5,21.5,28.5,25.5,23.7];
+const modGrowth = [14.1,16.5,21.1,17.5,11.4,22.2,24.3,23.1,26.3,24.4,22.4,30.1,26.4,28.0,33.5,34.1,32.3,33.6,34.9,31.3,27.8,31.5,32.2];
+const highGrowth = [10.9,12.6,22.1,28.5,23.8,29.6,30.0,29.3,19.2,11.4,15.7,18.6,13.4,21.6,19.9,24.9,23.9,22.5,29.8,23.2,14.2,22.0,20.6];
+
+new Chart(document.getElementById('chart-gdp-prob'), {
+  type: 'bar',
+  data: {
+    labels: quarters,
+    datasets: [
+      { label: 'Negative', data: negGrowth, backgroundColor: '#ff3e3eaa', stack: 's' },
+      { label: '0-1.4%', data: lowGrowth, backgroundColor: '#ff8800aa', stack: 's' },
+      { label: '1.5-2.4%', data: modGrowth, backgroundColor: '#ffd700aa', stack: 's' },
+      { label: '2.5%+', data: highGrowth, backgroundColor: '#00ff88aa', stack: 's' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      y: { stacked: true, max: 100, grid: { color: '#1a1a2a' }, ticks: { callback: v => v+'%', font: { size: 8 } } },
+      x: { stacked: true, grid: { display: false }, ticks: { maxRotation: 60, font: { size: 7 }, maxTicksLimit: 12 } }
+    },
+    plugins: { legend: { position: 'top' } }
+  }
+});
+
+// CHART 6: Spending
+const spendInc = [15.1,24.9,30.8,37.8,57.4,52.8,60.5,66.0,61.5,54.6,50.6,45.8,44.2,47.7,42.9,46.9,46.4,44.9,41.0,39.9,36.3,41.0,39.6];
+const spendDec = [68.9,53.8,38.4,23.5,14.7,14.3,13.9,12.6,12.7,18.6,18.2,23.1,24.2,27.1,28.8,28.2,27.9,29.5,29.0,30.2,34.7,29.0,31.2];
+const spendNc = [16.1,21.3,30.8,38.7,27.9,32.9,25.5,21.4,25.8,26.8,31.2,31.1,31.6,25.2,28.3,24.8,25.7,25.7,30.0,29.9,29.1,30.1,29.2];
+
+new Chart(document.getElementById('chart-spending'), {
+  type: 'line',
+  data: {
+    labels: quarters,
+    datasets: [
+      { label: 'Increase', data: spendInc, borderColor: '#00ff88', backgroundColor: '#00ff8822', ...mobileLineOpts, fill: true },
+      { label: 'Decrease', data: spendDec, borderColor: '#ff3e3e', backgroundColor: '#ff3e3e22', ...mobileLineOpts, fill: true },
+      { label: 'No Change', data: spendNc, borderColor: '#88888866', ...mobileLineOpts, borderDash: [3,3], fill: false }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, scales: mobileScaleOpts(0, 75, true) }
+});
+
+// CHART 7: S&P 500
+const sp12Best = [4.7,4.9,6.7,6.6,6.2,6.1,3.3,1.9,2.4,3.4,3.0,4.2,4.9,5.3,6.7,6.2,6.4,7.2,6.1,5.0,6.8,6.4];
+const sp12Worst = [-4.7,-4.2,-2.4,-2.6,-2.5,-3.5,-6.2,-8.3,-8.2,-7.9,-6.8,-5.6,-4.7,-4.5,-2.8,-3.4,-3.9,-2.7,-3.5,-4.2,-2.4,-3.1];
+const sp10yr = [8.4,8.6,8.5,8.2,9.3,8.8,8.7,9.3,9.3,8.5,8.5,8.5,8.8,9.1,9.2,9.5,9.5,9.7,9.7,9.6,9.7,9.9];
+const spQ = quarters.slice(1);
+
+new Chart(document.getElementById('chart-sp500'), {
+  type: 'line',
+  data: {
+    labels: spQ,
+    datasets: [
+      { label: '12mo Best', data: sp12Best, borderColor: '#00ff88', ...mobileLineOpts },
+      { label: '12mo Worst', data: sp12Worst, borderColor: '#ff3e3e', ...mobileLineOpts },
+      { label: '10yr Avg', data: sp10yr, borderColor: '#ffd700', ...mobileLineOpts, borderWidth: 2 }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, scales: mobileScaleOpts(undefined, undefined, true) }
+});
+
+// CHART 8: Size
+const smallOpt = [63.8,60.5,66.1,66.9,57.1,56.6,50.7,48.2,50.2,50.5,49.5,53.5,54.5,55.3,56.9,58.0,56.3,62.4,58.4,58.2,58.6,55.6];
+const largeOpt = [55.1,61.3,67.7,70.0,62.5,59.0,58.9,49.6,54.3,56.3,57.4,58.7,61.4,62.0,63.3,63.3,64.3,67.4,64.3,59.5,64.5,61.5];
+
+new Chart(document.getElementById('chart-size'), {
+  type: 'line',
+  data: {
+    labels: spQ,
+    datasets: [
+      { label: 'Small (1-24)', data: smallOpt, borderColor: '#ff8800', ...mobileLineOpts },
+      { label: 'Large (500+)', data: largeOpt, borderColor: '#b366ff', ...mobileLineOpts }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, scales: mobileScaleOpts(44, 75, false) }
+});
+
+// CHART 9: Expectations
+const wageExp = [-0.2,1.7,1.7,4.5,7.4,6.7,7.5,7.7,8.3,8.2,8.4,7.0,6.2,5.9,5.9,5.6,6.3,5.2,4.2,4.2,4.0,4.3,4.3];
+const priceExp = [1.1,1.9,1.9,4.9,6.5,6.7,7.1,8.2,9.0,7.3,8.5,5.1,4.5,5.6,4.2,4.2,4.1,3.4,3.1,3.5,4.8,4.6,4.5];
+const unitCostExp = [null,null,null,null,6.6,6.9,9.0,8.2,9.8,8.6,8.4,5.5,5.9,6.5,5.1,4.4,4.1,4.0,3.7,3.9,5.2,4.7,5.4];
+const revExpFull = [-3.1,0.6,0.1,7.9,9.7,11.0,13.5,11.0,9.2,9.0,9.1,7.2,3.0,3.6,3.6,5.8,5.5,4.8,5.4,6.8,5.4,7.8,7.0];
+
+new Chart(document.getElementById('chart-expectations'), {
+  type: 'line',
+  data: {
+    labels: quarters,
+    datasets: [
+      { label: 'Wages', data: wageExp, borderColor: '#ff3e3e', ...mobileLineOpts },
+      { label: 'Prices', data: priceExp, borderColor: '#ff8800', ...mobileLineOpts },
+      { label: 'Unit Costs', data: unitCostExp, borderColor: '#ffd700', ...mobileLineOpts, borderDash: [3,3] },
+      { label: 'Revenue', data: revExpFull, borderColor: '#00ff88', ...mobileLineOpts, borderWidth: 2 }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, scales: mobileScaleOpts(undefined, undefined, true) }
+});
+
+// CHART 10: Margins
+const revWageSpread = revExpFull.map((r,i) => r !== null && wageExp[i] !== null ? +(r - wageExp[i]).toFixed(1) : null);
+const revUnitSpread = revExpFull.map((r,i) => unitCostExp[i] !== null && r !== null ? +(r - unitCostExp[i]).toFixed(1) : null);
+
+new Chart(document.getElementById('chart-margins'), {
+  type: 'bar',
+  data: {
+    labels: quarters,
+    datasets: [
+      { label: 'Rev-Wage', data: revWageSpread, backgroundColor: revWageSpread.map(v => v !== null ? (v >= 0 ? '#00ff8855' : '#ff3e3e55') : null), borderColor: revWageSpread.map(v => v !== null ? (v >= 0 ? '#00ff88' : '#ff3e3e') : null), ...mobileBarOpts },
+      { label: 'Rev-UnitCost', data: revUnitSpread, backgroundColor: revUnitSpread.map(v => v !== null ? (v >= 0 ? '#00d4ff33' : '#ff880033') : null), borderColor: revUnitSpread.map(v => v !== null ? (v >= 0 ? '#00d4ff' : '#ff8800') : null), ...mobileBarOpts }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      y: { grid: { color: '#1a1a2a' }, ticks: { callback: v => v+'pts', font: { size: 8 } } },
+      x: { grid: { display: false }, ticks: { maxRotation: 60, font: { size: 7 }, maxTicksLimit: 12 } }
+    }
+  }
+});
+
+// CHART 11: Not Investing
+const niQ = ['Q3\'20','Q1\'21','Q3\'21','Q1\'22','Q3\'22','Q1\'23','Q3\'23','Q1\'24','Q3\'24','Q1\'25','Q3\'25'];
+const uncertainty = [47.7,27.0,32.3,38.4,33.0,26.7,26.3,24.8,31.7,32.3,23.7];
+const noCapacity = [53.5,65.8,61.6,53.5,56.7,61.9,59.6,59.0,50.0,54.8,58.3];
+const preserveCash = [46.5,27.9,27.3,28.3,38.1,36.2,35.4,29.9,33.1,33.9,30.8];
+const financing = [7.0,7.2,2.0,7.1,14.4,23.8,24.2,23.1,23.9,16.1,11.5];
+
+new Chart(document.getElementById('chart-not-invest'), {
+  type: 'line',
+  data: {
+    labels: niQ,
+    datasets: [
+      { label: 'Uncertainty', data: uncertainty, borderColor: '#ff3e3e', ...mobileLineOpts, pointRadius: 2 },
+      { label: 'No Expand', data: noCapacity, borderColor: '#8888a0', ...mobileLineOpts, pointRadius: 2 },
+      { label: 'Cash', data: preserveCash, borderColor: '#ffd700', ...mobileLineOpts, pointRadius: 2 },
+      { label: 'Financing', data: financing, borderColor: '#b366ff', ...mobileLineOpts, pointRadius: 2 }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, scales: mobileScaleOpts(0, 70, true) }
+});
+
+// CHART 12: Investment Plans
+const ipQ = ['Q3\'20','Q1\'21','Q3\'21','Q1\'22','Q3\'22','Q1\'23','Q3\'23','Q1\'24','Q3\'24','Q1\'25','Q3\'25'];
+const structInvest = [30.6,33.9,32.7,33.1,28.5,30.7,34.0,39.9,36.2,37.1,33.6];
+const equipInvest = [62.9,63.3,62.9,66.2,63.3,57.6,63.8,63.6,63.0,60.9,61.3];
+
+new Chart(document.getElementById('chart-invest-plans'), {
+  type: 'bar',
+  data: {
+    labels: ipQ,
+    datasets: [
+      { label: 'Structures', data: structInvest, backgroundColor: '#ff880055', borderColor: '#ff8800', ...mobileBarOpts },
+      { label: 'Equipment', data: equipInvest, backgroundColor: '#00d4ff55', borderColor: '#00d4ff', ...mobileBarOpts }
+    ]
+  },
+  options: { responsive: true, maintainAspectRatio: false, scales: mobileScaleOpts(0, 80, true) }
+});
+</script>
+</body>
+</html>
